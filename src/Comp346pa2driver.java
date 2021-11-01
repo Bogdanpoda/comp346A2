@@ -1,4 +1,4 @@
-package comp346pa2w2020;
+package src;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -17,14 +17,16 @@ public class Comp346pa2driver {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        System.out.println("Hello does it run??");
         
     	Network objNetwork = new Network( );            /* Activate the network */
         objNetwork.start();
 
         Client objClient1 = new Client("sending");          /* Start the sending client thread */
         objClient1.start();
-        Client objClient2 = new Client("receiving");        /* Start the receiving client thread */
+        Client objClient2 = new src.Client("receiving");        /* Start the receiving client thread */
         objClient2.start();
+
         
       /*..............................................................................................................................................................*/
        

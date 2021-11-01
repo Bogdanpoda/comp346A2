@@ -1,4 +1,4 @@
-package comp346pa2w2020;
+package src;
 
 import java.util.Scanner;
 import java.io.FileInputStream;
@@ -219,7 +219,42 @@ public class Client extends Thread {
     public void run()
     {   
     	Transactions transact = new Transactions();
-    	long sendClientStartTime, sendClientEndTime, receiveClientStartTime, receiveClientEndTime;
+    	long sendClientStartTime, sendClientEndTime, receiveClientStartTime=0, receiveClientEndTime=0;
+
+        if (clientOperation.equals("sending")) {
+            sendClientStartTime = System.currentTimeMillis();
+            for (int j = 0; j < numberOfTransactions; j++) {
+                if (Network.getInBufferStatus().equals("full")) {
+                    j--;
+                    Thread.yield();
+                } else {
+                    Network.send(transaction[j]);
+                }
+            }
+
+            sendClientEndTime = System.currentTimeMillis();
+            System.out.println("Terminating client sending thread - Running time " +(sendClientEndTime-sendClientStartTime)+" milliseconds");
+        }
+
+        if (clientOperation.equals("receiving")) {
+            receiveClientStartTime = System.currentTimeMillis();
+            for (int l = 0; l < numberOfTransactions; l++) {
+
+//                if(objNetwork.getOutBufferStatus().equals("normal")){
+//
+//
+//                }
+                if (Network.getOutBufferStatus().equals("empty")) {
+                    Thread.yield();
+                    l--;
+                } else {
+                    Network.receive(transaction[l]);
+                }
+            }
+            receiveClientEndTime = System.currentTimeMillis();
+            System.out.println("Terminating client receiving thread - Running time " +(receiveClientEndTime-receiveClientStartTime)+" milliseconds");
+        }
+        Network.disconnect(Network.getClientIP());
      
          /*................................................................................................................................................................................................................*/
               
@@ -227,4 +262,4 @@ public class Client extends Thread {
             }
                 
     }
-}
+

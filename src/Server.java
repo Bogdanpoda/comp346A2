@@ -1,4 +1,4 @@
-package comp346pa2w2020;
+package src;
 
 import java.util.Scanner;
 import java.io.FileInputStream;
@@ -416,18 +416,48 @@ public class Server extends Thread {
      */
       
     public void run()
-    {   Transactions trans = new Transactions();
+    {
+        Transactions trans = new Transactions();
     	 long serverStartTime, serverEndTime;
     
 	/* System.out.println("\n DEBUG : Server.run() - starting server thread " + getServerThreadId() + " " + Network.getServerConnectionStatus()); */
     	
-	Transactions trans = new Transactions();
-    	long serverStartTime, serverEndTime;
+	//Transactions trans = new Transactions();
+    	//long serverStartTime, serverEndTime;
     
 	/* System.out.println("\n DEBUG : Server.run() - starting server thread " + objNetwork.getServerConnectionStatus()); */
     	
-    	/* .....................................................................................................................................................................................................*/
-        
+
+        /* .....................................................................................................................................................................................................*/
+        serverStartTime = System.currentTimeMillis();
+        System.out.println("\n DEBUG : Server.run() - starting server thread " + Network.getServerConnectionStatus());
+
+
+        for (int p =0 ; p < numberOfAccounts; p++){
+            if (Network.getClientConnectionStatus().equals("disconnected")){
+                break;
+            }
+            if(Network.getInBufferStatus().equals("empty")){
+                p--;
+                Thread.yield();
+            }
+//                if(objNetwork.getInBufferStatus().equals("empty")&&objNetwork.getOutBufferStatus().equals("empty")){
+//                    break;
+//                }
+            else{
+                //objNetwork.transferIn(transaction);
+                processTransactions(trans);
+                p++;
+                //objNetwork.transferOut(transaction);
+
+            }
+        }
+
+
+        /* Implement the code for the run method */
+        serverEndTime = System.currentTimeMillis();
+        System.out.println("\n Terminating server thread - " + " Running time " + (serverEndTime - serverStartTime) + " milliseconds");
+        Network.disconnect(Network.getServerIP());
         System.out.println("\n Terminating server thread - " + " Running time " + (serverEndTime - serverStartTime) + " milliseconds");
 	
     }

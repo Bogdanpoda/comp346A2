@@ -1,4 +1,4 @@
-package comp346pa2w2020;
+package src;
 
 import java.util.concurrent.*;
 
@@ -362,8 +362,8 @@ public class Network extends Thread {
         		  inComingPacket[inputIndexClient].setTransactionError(inPacket.getTransactionError());
         		  inComingPacket[inputIndexClient].setTransactionStatus("transferred");
             
-        		 /* System.out.println("\n DEBUG : Network.send() - index inputIndexClient " + inputIndexClient); */
-        		  /* System.out.println("\n DEBUG : Network.send() - account number " + inComingPacket[inputIndexClient].getAccountNumber()); */
+        		  System.out.println("\n DEBUG : Network.send() - index inputIndexClient " + inputIndexClient);
+        		   System.out.println("\n DEBUG : Network.send() - account number " + inComingPacket[inputIndexClient].getAccountNumber());
             
         		  setinputIndexClient(((getinputIndexClient( ) + 1) % getMaxNbPackets ()));	/* Increment the input buffer index  for the client */
         		  /* Check if input buffer is full */
@@ -396,8 +396,8 @@ public class Network extends Thread {
         		 outPacket.setTransactionError(outGoingPacket[outputIndexClient].getTransactionError());
         		 outPacket.setTransactionStatus("done");
             
-        		 /* System.out.println("\n DEBUG : Network.receive() - index outputIndexClient " + outputIndexClient); */
-        		 /* System.out.println("\n DEBUG : Network.receive() - account number " + outPacket.getAccountNumber()); */
+        		  System.out.println("\n DEBUG : Network.receive() - index outputIndexClient " + outputIndexClient);
+        		  System.out.println("\n DEBUG : Network.receive() - account number " + outPacket.getAccountNumber());
             
         		 setoutputIndexClient(((getoutputIndexClient( ) + 1) % getMaxNbPackets( ))); /* Increment the output buffer index for the client */
         		 /* Check if output buffer is empty */
@@ -468,8 +468,8 @@ public class Network extends Thread {
     		     inPacket.setTransactionError(inComingPacket[outputIndexServer].getTransactionError());
     		     inPacket.setTransactionStatus("received");
            
-    		     /* System.out.println("\n DEBUG : Network.transferIn() - index outputIndexServer " + outputIndexServer); */
-    		     /* System.out.println("\n DEBUG : Network.transferIn() - account number " + inPacket.getAccountNumber()); */
+    		      System.out.println("\n DEBUG : Network.transferIn() - index outputIndexServer " + outputIndexServer);
+                  System.out.println("\n DEBUG : Network.transferIn() - account number " + inPacket.getAccountNumber());
             
     		     setoutputIndexServer(((getoutputIndexServer() + 1) % getMaxNbPackets()));	/* Increment the input buffer index for the server */
     		     /* Check if input buffer is empty */
@@ -477,7 +477,7 @@ public class Network extends Thread {
     		     {
     		    	 setInBufferStatus("empty");
                 
-    		    	/* System.out.println("\n DEBUG : Network.transferIn() - inComingBuffer status " + getInBufferStatus()); */
+    		    	 System.out.println("\n DEBUG : Network.transferIn() - inComingBuffer status " + getInBufferStatus());
     		     }
     		     else 
     		     {
@@ -557,10 +557,21 @@ public class Network extends Thread {
      */
     public void run()
     {	
-    	/* System.out.println("\n DEBUG : Network.run() - starting network thread"); */
+    	 System.out.println("\n DEBUG : Network.run() - starting network thread");
     	
     	while (true)
     	{
+
+            if(getClientConnectionStatus().equals("disconnected") && getServerConnectionStatus().equals("disconnected")){
+                setNetworkStatus("inactive");
+                if(networkStatus.equals("inactive")){
+                    System.out.println("Terminating network thread - Client disconnected Server disconnected");
+                    System.exit(0);
+                }
+
+            }else{
+                Thread.yield();
+            }
     		/*................................................................................................................................................................*/
     	}    
     }
